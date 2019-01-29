@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TODoIT</title>
+  <style>
+    body {
+      background-color: #efefef
+    }
+    html {
+      font-family: 'Segoe UI';
+      font-size: 62.5%
+    }
+
+    .heading {
+      text-align: center;
+      font-size: 2rem;
+      background-color: #28c5ec;
+      width: 50rem;
+      margin: 0 auto;
+      /* padding-bottom: .1rem; */
+    }
+
+    .container {
+      width: 50rem;
+      margin: 0 auto;
+      font-size: 1.5rem;
+      background-color: #fffdfd;
+      padding: 3rem;
+    }
+
+    .todo-input {
+      width: 100%;
+      padding: 0 2rem;
+    }
+
+    .input {
+      padding: .5rem;
+      width: 80%;
+    }
+
+    .btn {
+      padding-right: 2rem;
+      padding-left: 2rem;
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+      text-decoration-line: none;
+    }
+
+    .todo-item {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      text-transform: capitalize;
+      display: flex;
+      justify-content: space-between;
+      color: #5939eb
+    }
+
+    .done {
+      text-decoration-line: line-through;
+      color: #e96b6b
+    }
+
+    ul{
+      list-style: none;
+      padding-left: 1rem;
+    }
+
+    .todo-item:not(:last-child) {
+      border-bottom: solid grey .1rem 
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="heading">
+      <h1 style="font-style:italic">~My To Do List~</h1>
+    </div>
+  </header>
+  <main>
+      <div class="container">
+          <div class="todo-input">
+              <form action="/" method="POST">
+                <input class="input" type="text" name="todo" id="">
+                <button class='btn' type="submit">ADD</button>
+              </form>
+            </div>
+        
+            <div class="todos">
+              <ul>
+                  <% todoList.forEach(function(item){ %>
+                    <% if(!item.done) { %>
+                      <li class="todo-item"> <%=item.todo %> <span><button onclick="done('<%=JSON.stringify(item)%>')" class="btn">Done</button> <button onclick="remove('<%=JSON.stringify(item)%>')" class="btn">Remove</button></span> </li>
+                    <% } else { %>
+                      <li class="todo-item"> <span class="done"> <%=item.todo %> </span> <button onclick="remove('<%=JSON.stringify(item)%>')" class="btn">Remove</button> </li>
+                    <% } %>
+                  <% }) %>
+              </ul>
+            </div>
+      </div>
+  </main>
+</body>
+
+<script src="./axios.js"></script>
+<script>
+  function done(item) {
+    item = JSON.parse(item)
+    var todo = item 
+    todo.done = true 
+    console.log(todo)
+    axios.put('/',todo).then((res) => {
+      if(res.status == 200) {
+        alert(`To Do list updated ${item.todo} is now done refresh page to see changes`)
+      }
+    })
+  }
+
+  function remove(item) {
+    item = JSON.parse(item)
+    console.log(item)
+    axios.patch('/',item).then((res) => {
+      if(res.status == 200) {
+        alert(`Deleted ${item.todo} refresh page to see changes`)
+      }
+    })
+  }
+</script>
+</html>
