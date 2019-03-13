@@ -11,14 +11,14 @@ const saveFile = require('./saveFile')
 var app = express()
 app.set('view engine', 'ejs')
 
+var port = process.env.PORT || 3000
+
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(express.static(__dirname+'/public'))
-app.use((req,res,next) => {
-  next()
-})
 
+// routes
 app.get('/', (req,res) => {
   var todoArray = saveFile.loadTodos()  
   
@@ -58,9 +58,9 @@ app.put('/', (req,res) => {
 app.patch('/', (req,res) => {
   var todoToDelete = req.body
   saveFile.removeToDo(todoToDelete)
-  res.status(200).send('Deleted Todo')
+  res.status(200).redirect('/')
 })
 
-app.listen(3000, () => {
-  console.log('App Listening On Port 3000')
+app.listen(port, () => {
+  console.log(`App Running On http://localhost:${port}`)
 })
